@@ -7,10 +7,12 @@ from community.tools.retrieval import (
     ConnectorRetriever,
     LlamaIndexUploadPDFRetriever,
     PubMedRetriever,
+    XmosRetriever,
 )
 
 
 class CommunityToolName(StrEnum):
+    Xmos = "Xmos"
     Arxiv = "Arxiv"
     Connector = "Connector"
     Pub_Med = "Pub Med"
@@ -20,6 +22,15 @@ class CommunityToolName(StrEnum):
 
 
 COMMUNITY_TOOLS = {
+    CommunityToolName.Xmos: ManagedTool(
+        name=CommunityToolName.Xmos,
+        implementation=XmosRetriever,
+        is_visible=True,
+        is_available=XmosRetriever.is_available(),
+        error_message="XmosRetriever is not available.",
+        category=Category.DataLoader,
+        description="Retrieves documents from XMOS's documentation.",
+    ),
     CommunityToolName.Arxiv: ManagedTool(
         name=CommunityToolName.Arxiv,
         implementation=ArxivRetriever,
