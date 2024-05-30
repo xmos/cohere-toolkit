@@ -27,7 +27,7 @@ class CohereDeployment(BaseDeployment):
 
     @property
     def rerank_enabled(self) -> bool:
-        return True
+        return False
 
     @classmethod
     def list_models(cls) -> List[str]:
@@ -58,7 +58,6 @@ class CohereDeployment(BaseDeployment):
         return all([os.environ.get(var) is not None for var in COHERE_ENV_VARS])
 
     def invoke_chat(self, chat_request: CohereChatRequest, **kwargs: Any) -> Any:
-        print(f"MODEL: {chat_request.model}")
         return self.client.chat(
             **chat_request.model_dump(exclude={"stream"}),
             **kwargs,
@@ -95,9 +94,6 @@ class CohereDeployment(BaseDeployment):
     def invoke_rerank(
         self, query: str, documents: List[Dict[str, Any]], **kwargs: Any
     ) -> Any:
-        print("RERANK: WHY ARE WE RERANKING???")
-        print(f"query: {query}")
-        print(f"documents: {documents}")
         return self.client.rerank(
             query=query, documents=documents, model="rerank-english-v3.0", **kwargs
         )
