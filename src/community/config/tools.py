@@ -27,6 +27,13 @@ COMMUNITY_TOOLS = {
     CommunityToolName.Xmos: ManagedTool(
         name=CommunityToolName.Xmos,
         implementation=XmosRetriever,
+        parameter_definitions={
+            "query": {
+                "description": "Query for retrieval.",
+                "type": "str",
+                "required": True,
+            }
+        },
         is_visible=True,
         is_available=XmosRetriever.is_available(),
         error_message="XmosRetriever is not available.",
