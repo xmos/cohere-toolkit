@@ -96,6 +96,8 @@ class CohereDeployment(BaseDeployment):
         self, query: str, documents: List[Dict[str, Any]], **kwargs: Any
     ) -> Any:
         print("RERANK: WHY ARE WE RERANKING???")
+        print(f"query: {query}")
+        print(f"documents: {documents}")
         return self.client.rerank(
             query=query, documents=documents, model="rerank-english-v3.0", **kwargs
         )
