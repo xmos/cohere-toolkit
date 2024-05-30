@@ -131,11 +131,12 @@ def get_available_tools() -> dict[ToolName, dict]:
 
     if use_community_tools:
         try:
-            from community.config.tools import COMMUNITY_TOOLS
+            from community.config.tools import COMMUNITY_TOOLS, CommunityToolName
 
             tools = ALL_TOOLS.copy()
             tools.update(COMMUNITY_TOOLS)
-            return tools
+            tool_we_care_about = [CommunityToolName.Xmos, ToolName.Tavily_Internet_Search, ToolName.Python_Interpreter]
+            return {key: tools[key] for key in tool_we_care_about}
         except ImportError:
             logging.warning("Community tools are not available. Skipping.")
 
