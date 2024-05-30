@@ -63,6 +63,7 @@ async def chat_stream(
         managed_tools,
         deployment_config,
     ) = process_chat(session, chat_request, request)
+    print(f"chat_request: {chat_request}, deployment_name: {deployment_name}, deployment_config: {deployment_config}, file_paths: {file_paths}, managed_tools: {managed_tools}")
 
     return EventSourceResponse(
         generate_chat_stream(

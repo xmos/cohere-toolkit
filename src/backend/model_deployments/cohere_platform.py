@@ -97,10 +97,10 @@ class CohereDeployment(BaseDeployment):
     ) -> Any:
         print("RERANK: WHY ARE WE RERANKING???")
         return self.client.rerank(
-            query=query, documents=documents, model="rerank-english-v2.0", **kwargs
+            query=query, documents=documents, model="rerank-english-v3.0", **kwargs
         )
 
     def invoke_tools(self, message: str, tools: List[Any], **kwargs: Any) -> List[Any]:
         return self.client.chat(
-            message=message, tools=tools, model="command-r", **kwargs
+            message=message, tools=tools, model="command-r-plus", **kwargs
         )
