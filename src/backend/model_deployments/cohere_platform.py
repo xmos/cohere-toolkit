@@ -58,6 +58,7 @@ class CohereDeployment(BaseDeployment):
         return all([os.environ.get(var) is not None for var in COHERE_ENV_VARS])
 
     def invoke_chat(self, chat_request: CohereChatRequest, **kwargs: Any) -> Any:
+        print(f"MODEL: {chat_request.model}")
         return self.client.chat(
             **chat_request.model_dump(exclude={"stream"}),
             **kwargs,
@@ -94,6 +95,7 @@ class CohereDeployment(BaseDeployment):
     def invoke_rerank(
         self, query: str, documents: List[Dict[str, Any]], **kwargs: Any
     ) -> Any:
+        print("RERANK: WHY ARE WE RERANKING???")
         return self.client.rerank(
             query=query, documents=documents, model="rerank-english-v2.0", **kwargs
         )
