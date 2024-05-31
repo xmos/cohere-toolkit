@@ -8,8 +8,8 @@ from community.tools import (
     LlamaIndexUploadPDFRetriever,
     ManagedTool,
     PubMedRetriever,
-    XmosRetriever,
     WolframAlpha,
+    XmosRetriever,
 )
 
 
