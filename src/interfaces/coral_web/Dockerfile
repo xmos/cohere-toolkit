@@ -1,17 +1,21 @@
-FROM node:18-alpine
+# Use a specific node version alpine image
+FROM node:18-alpine AS builder
 
+# Set the working directory
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Copy package files
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
+# Install dependencies
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
-  # Allow install without lockfile, so example works even without Node.js installed locally
   else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
   fi
 
+# Copy the necessary files
 COPY src ./src
 COPY public ./public
 COPY next.config.mjs .
@@ -19,17 +23,26 @@ COPY tsconfig.json .
 COPY tailwind.config.js .
 COPY postcss.config.js .
 COPY .en[v] .env
+COPY .env.production .env.production
 
-# Next.js collects completely anonymous telemetry data about general usage. Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line to disable telemetry at run time
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Build the Next.js application
+RUN npm run build
 
-# Note: Don't expose ports here, Compose will handle that for us
+# Set up the production environment
+FROM node:18-alpine
 
-# Start Next.js in development mode based on the preferred package manager
-CMD \
-  if [ -f yarn.lock ]; then yarn dev; \
-  elif [ -f package-lock.json ]; then npm run dev; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm dev; \
-  else npm run dev; \
-  fi
+WORKDIR /app
+
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
+EXPOSE 3000
+
+# Copy built assets from the builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+# Expose the port the app runs on
+CMD ["npm", "start"]
