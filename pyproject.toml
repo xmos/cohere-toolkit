@@ -71,11 +71,6 @@ optional = true
 
 [tool.poetry.group.community.dependencies]
 wolframalpha = "^5.0.0"
-transformers = "^4.40.1"
-torch = "^2.3.0"
-llama-cpp-python = "^0.2.67"
-sentence-transformers = "^3.0.0"
-langchain-qdrant = "^0.1.0"
 langserve = "^0.2.1"
 llama-index = "^0.10.11"
 
