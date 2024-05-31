@@ -44,7 +44,7 @@ ALL_TOOLS = {
             }
         },
         kwargs={"chunk_size": 300, "chunk_overlap": 0},
-        is_visible=True,
+        is_visible=False,
         is_available=LangChainWikiRetriever.is_available(),
         error_message="LangChainWikiRetriever not available.",
         category=Category.DataLoader,
@@ -60,7 +60,7 @@ ALL_TOOLS = {
                 "required": True,
             }
         },
-        is_visible=True,
+        is_visible=False,
         is_available=LangChainVectorDBRetriever.is_available(),
         error_message="LangChainVectorDBRetriever not available, please make sure to set the COHERE_API_KEY environment variable.",
         category=Category.FileLoader,
@@ -92,7 +92,7 @@ ALL_TOOLS = {
                 "required": True,
             }
         },
-        is_visible=True,
+        is_visible=False,
         is_available=Calculator.is_available(),
         error_message="Calculator tool not available.",
         category=Category.Function,
@@ -131,16 +131,11 @@ def get_available_tools() -> dict[ToolName, dict]:
 
     if use_community_tools:
         try:
-            from community.config.tools import COMMUNITY_TOOLS, CommunityToolName
+            from community.config.tools import COMMUNITY_TOOLS
 
             tools = ALL_TOOLS.copy()
             tools.update(COMMUNITY_TOOLS)
-            tool_we_care_about = [
-                CommunityToolName.Xmos,
-                ToolName.Tavily_Internet_Search,
-                ToolName.Python_Interpreter,
-            ]
-            return {key: tools[key] for key in tool_we_care_about}
+            return tools
         except ImportError:
             logging.warning("Community tools are not available. Skipping.")
 

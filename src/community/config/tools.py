@@ -50,7 +50,7 @@ COMMUNITY_TOOLS = {
                 "required": True,
             }
         },
-        is_visible=True,
+        is_visible=False,
         is_available=ArxivRetriever.is_available(),
         error_message="ArxivRetriever is not available.",
         category=Category.DataLoader,
@@ -59,7 +59,7 @@ COMMUNITY_TOOLS = {
     CommunityToolName.Connector: ManagedTool(
         name=CommunityToolName.Connector,
         implementation=ConnectorRetriever,
-        is_visible=True,
+        is_visible=False,
         is_available=ConnectorRetriever.is_available(),
         error_message="ConnectorRetriever is not available.",
         category=Category.DataLoader,
@@ -75,7 +75,7 @@ COMMUNITY_TOOLS = {
                 "required": True,
             }
         },
-        is_visible=True,
+        is_visible=False,
         is_available=PubMedRetriever.is_available(),
         error_message="PubMedRetriever is not available.",
         category=Category.DataLoader,
@@ -84,7 +84,7 @@ COMMUNITY_TOOLS = {
     CommunityToolName.File_Upload_LlamaIndex: ManagedTool(
         name=CommunityToolName.File_Upload_LlamaIndex,
         implementation=LlamaIndexUploadPDFRetriever,
-        is_visible=True,
+        is_visible=False,
         is_available=LlamaIndexUploadPDFRetriever.is_available(),
         error_message="LlamaIndexUploadPDFRetriever is not available.",
         category=Category.FileLoader,
@@ -102,7 +102,7 @@ COMMUNITY_TOOLS = {
     CommunityToolName.ClinicalTrials: ManagedTool(
         name=CommunityToolName.ClinicalTrials,
         implementation=ClinicalTrials,
-        is_visible=True,
+        is_visible=False,
         is_available=ClinicalTrials.is_available(),
         error_message="ClinicalTrialsTool is not available.",
         category=Category.Function,
