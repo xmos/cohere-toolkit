@@ -17,15 +17,6 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
-  test_db:
-    image: postgres:14.1-alpine
-    restart: unless-stopped
-    environment:
-      - PGUSER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=test_toolkit
-    ports:
-      - '5433:5432'
   backend:
     build:
       context: .
