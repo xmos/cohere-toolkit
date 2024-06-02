@@ -9,6 +9,59 @@ export const fixMarkdownImagesInText = (text: string) => {
   return text.replace('! [', '![');
 };
 
+// find all occurances of substrings and return their indexes
+// return array of startIdx (inclusive), endIdx (exclusive)
+const findSubstrIdxs = (text: string, substring: string) => {
+  const idxs: [number, number][] = []
+  
+  let start = 0;
+  while(true) {
+    const startIdx = text.substring(start).indexOf(substring);
+
+    // string doesn't occur
+    if(startIdx < 0) {
+      return idxs;
+    }
+    
+    const endIdx = startIdx +  substring.length;
+    idxs.push([startIdx + start, endIdx + start]);
+    start += endIdx;
+  }
+}
+
+
+const fixCitationIdxs = (text: string, citations: Citation[]) => {
+  return citations.map(citation => {
+    const searchResults = findSubstrIdxs(text, citation.text);
+
+    // find the intersections between each search result and the indexes in citation
+    const intersections = searchResults.map(([start, end]) => {
+      const overlapStart = Math.max(start, citation.start);
+      const overlapEnd = Math.min(end, citation.end);
+      const totalOverlap = overlapEnd - overlapStart;
+
+      const idxs = {start, end};
+      return {
+        overlap: totalOverlap,
+        idxs
+      };
+    });
+
+    const corrected = intersections.reduce((acc, curr) => {
+      const accOverlap = acc.overlap;
+      const currOverlap = curr.overlap;
+
+      return (accOverlap > currOverlap) ? acc : curr;
+    }, intersections[0]);
+
+    return {
+      ...citation,
+      start: corrected.idxs.start,
+      end: corrected.idxs.end
+    }
+  });
+}
+
 /**
  * Replace text string with citations following the format:
  *  :cite[<text>]{generationId="<generationId>" start="<startIndex>" end"<endIndex>"}
@@ -21,8 +74,11 @@ export const replaceTextWithCitations = (
   text: string,
   citations: Citation[],
   generationId: string
-) => {
+) => {  
   if (!citations.length || !generationId) return text;
+
+  citations = fixCitationIdxs(text, citations);
+
   let replacedText = text;
 
   let lengthDifference = 0; // Track the cumulative length difference
@@ -42,8 +98,11 @@ export const replaceTextWithCitations = (
     replacedText = replacedText.slice(0, citeStart) + citationId + replacedText.slice(citeEnd);
     lengthDifference += citationId.length - (citeEnd - citeStart);
   });
+  console.log(replacedText)
+
   return replacedText;
 };
+
 
 export const createStartEndKey = (start: number | string, end: number | string) =>
   `${start}-${end}`;
